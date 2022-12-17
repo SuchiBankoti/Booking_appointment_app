@@ -68,12 +68,17 @@
     let details=document.getElementsByClassName("input")
     let btn=document.getElementById("button")
     function saveToLocalStorage(){
-        let BookingDetail=[]
+        let appointments=[]
+        let BookingDetail={}
         Array.from(details).forEach(i=>{
-            let e=i.id+"- "+i.value
-            BookingDetail.push(e) 
+            BookingDetail={...BookingDetail,
+            [i.id]:i.value}
+            
         })
-        localStorage.setItem("Booking-details",JSON.stringify(BookingDetail))
+        appointments.push(BookingDetail)
+        let users=JSON.parse(localStorage.getItem("Booking-details"))
+        users?appointments.push(users[0]):""
+        localStorage.setItem("Booking-details",JSON.stringify(appointments))
     }
     btn.addEventListener("click", saveToLocalStorage)
 </script>
