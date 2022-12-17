@@ -61,7 +61,7 @@
     </div>
     </div>
     <div class="row">
-        <h2>Appointments</h2>
+        <h2 id="appoint-ments">Appointments</h2>
         <ol id="booking-list">
             
         </ol>
@@ -79,7 +79,6 @@
         Array.from(details).forEach(i=>{
             BookingDetail={...BookingDetail,
             [i.id]:i.value}
-            
         })
         appointments.push(BookingDetail)
         let users=JSON.parse(localStorage.getItem("Booking-details"))
@@ -89,18 +88,33 @@
     btn.addEventListener("click", saveToLocalStorage)
 
     let list=document.getElementById("booking-list")
-    
     let users=JSON.parse(localStorage.getItem("Booking-details"))
     users.forEach(obj=>{
         let li=document.createElement("li")
         li.classList.add("user")
-        li.textContent="Name- "+obj.name
+        li.textContent=obj.name
+        let deleteBtn=document.createElement("button")
+        deleteBtn.textContent="Delete"
+        let editBtn=document.createElement("button")
+        editBtn.textContent="Edit"
+         li.appendChild(deleteBtn)
+         li.appendChild(editBtn)
+
         let div=document.createElement("div")
         div.classList.add("details")
         div.innerHTML=`<p>Details</p><p>Email- ${obj.email}</p><p>Phone-Number-${obj.number}</p><p>Date of appointment-${obj.date} at ${obj.time}</p>`
        li.appendChild(div)
         list.appendChild(li)
     })
+    list.addEventListener("click", deleteAppointment)
+    function deleteAppointment(e){
+        users= JSON.parse(localStorage.getItem("Booking-details"))
+       let newUsers= users.filter(obj=>obj.name==e.target.parentElement.textContent)
+       localStorage.setItem("Booking-details",JSON.stringify(newUsers))
+            let li= e.target.parentElement
+            list.removeChild(li)
+
+    }
 </script>
 </html>
 
