@@ -41,3 +41,12 @@ button{
     display: flex;
     font-size: 0.6rem;
 }
+#booking-list{
+    background-color:salmon;
+    color:white;
+    padding:10px;
+}
+.user{
+background-color: rgb(240, 176, 169);
+margin:5px;
+}
