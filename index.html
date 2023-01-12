@@ -78,14 +78,17 @@
     let showAppointments=document.getElementById("appoint-ments")
     let btn=document.getElementById("button")
     btn.addEventListener("click", postUser)
-    showAppointments.addEventListener("click",()=>axios.
-    get("https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp")
-    .then(data=>showOutput(data.data)).catch(e=>console.log(e)))
+    showAppointments.addEventListener("click",()=>{
+        list.innerHTML=" "
+    axios.get("https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp")
+    .then(data=>showOutput(data.data)).catch(e=>console.log(e))
+    })
 
 function postUser(){
     let detail={}
     Array.from(details).forEach(i=>detail={...detail, [i.id]:i.value})
-    axios.post("https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp",detail)
+    axios.post("https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp",detail)
+    
 }
 function showOutput(users){
     users.forEach(obj=>{
@@ -99,19 +102,47 @@ function showOutput(users){
         list.appendChild(li)
         let deleteBtn=document.createElement("button")
         deleteBtn.textContent="Delete"
-        deleteBtn.addEventListener("click",async function(){
-            const d=await axios.delete(`https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp/${obj._id}`)
-            list.innerHTML=""
-            axios.get("https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp")
-    .then(data=>showOutput(data.data)).catch(e=>console.log(e))
-        })
+        deleteBtn.addEventListener("click",()=>{
+            axios.delete(`https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp/${obj._id}`).then(data=>{
+                     list.innerHTML=""
+                     axios.get("https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp").
+                     then(data=>showOutput(data.data)).catch(e=>console.log(e))
+            }).catch(e=>console.log(e))
+            })
         let editBtn=document.createElement("button")
         editBtn.textContent="Edit"
+        editBtn.addEventListener("click",()=>axios.get(`https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp/${obj._id}`)
+        .then(data=>{
+            Object.keys(data.data).forEach(e=>{
+        if(e!="_id"){
+         let inputElement=document.getElementById(`${e}`)
+        inputElement.value=data.data[e]
+        }
+      })
+      let formpage=document.getElementById("form-page")
+      let saveBtn=document.createElement("button")
+      saveBtn.textContent="save"
+      formpage.appendChild(saveBtn)
+      saveBtn.addEventListener("click",()=>{
+        let newDetails=document.getElementsByClassName("input")
+        let putObj={}
+       Array.from(newDetails).forEach(e=>putObj={...putObj,[e.id]:e.value})
+      axios.put(`https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp/${obj._id}`,putObj)
+        list.innerHTML=""
+      axios.get('https://crudcrud.com/api/78d273819ec5481883aa218b14df46f1/appointmentApp').then(data=>{
+        showOutput(data.data)
+    formpage.removeChild(saveBtn)
+    })
+      })
+        })
+        )
          li.appendChild(deleteBtn)
          li.appendChild(editBtn)
-    })
+    
+})
 }
- 
+      
+      
 </script>
 </html>
 
