@@ -99,8 +99,8 @@ function showOutput(users){
         list.appendChild(li)
         let deleteBtn=document.createElement("button")
         deleteBtn.textContent="Delete"
-        deleteBtn.addEventListener("click",()=> {
-            axios.delete(`https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp/${obj._id}`)
+        deleteBtn.addEventListener("click",async function(){
+            const d=await axios.delete(`https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp/${obj._id}`)
             list.innerHTML=""
             axios.get("https://crudcrud.com/api/8522868153334bb3be52719cb5bea2dd/appointmentApp")
     .then(data=>showOutput(data.data)).catch(e=>console.log(e))
