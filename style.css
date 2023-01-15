@@ -1,17 +1,18 @@
 body{
     margin: 0;
+    background-color: rgb(101, 173, 240);
 }
 .container{
     padding: 10px;
     font-size: 1rem;
 }
-h2{
+h2,h4{
     margin: 0;
-    color: salmon;
+    color: white;
     font-size: 1rem;
 }
 #form-page{
-    border: 1px solid salmon;
+    border: 1px solid white;
     display: flex;
     flex-direction: column;
     width: fit-content;
@@ -19,7 +20,7 @@ h2{
 
 }
 #form{
-    border-top: 2px solid salmon;
+    border-top: 2px solid white;
     display: flex;
     flex-direction: column;
     align-items:flex-start;
@@ -33,20 +34,20 @@ h2{
     font-size: 1rem;
 }
 button{
-    background-color: salmon;
-    color:white;
-    border: 1px solid salmon;
+    background-color:  rgb(234, 241, 248);
+    color:rgb(9, 8, 8);
+    border: 1px solid  rgb(101, 173, 240);
 }
 #set-time{
     display: flex;
     font-size: 0.6rem;
 }
 #booking-list{
-    background-color:salmon;
+    background-color: rgb(101, 173, 240);
     color:white;
     padding:10px;
 }
 .user{
-background-color: rgb(240, 176, 169);
+background-color:  rgb(138, 189, 233);
 margin:5px;
 }
