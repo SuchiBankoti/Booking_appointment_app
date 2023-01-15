@@ -57,8 +57,8 @@
     </div>
     </div>
     <div class="row">
-        <h4 id="appoint-ments">Appointments</h4>
-        <ol id="booking-list">
+        <h4>Appointments</h4>
+        <ol id="appointments">
             
         </ol>
     </div>
@@ -69,71 +69,72 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 
 <script>
-    let details=document.getElementsByClassName("input")
-    let list=document.getElementById("booking-list")
-    let btn=document.getElementById("button")
-// show the appontments when the page loads
-    axios.get("https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp")
-    .then(data=>showOutput(data.data)).catch(e=>console.log(e))
-    // posts the input data in backend server
-function postUser(){
-    let detail={}
-    Array.from(details).forEach(i=>detail={...detail, [i.id]:i.value})
-    axios.post("https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp",detail).then(data=>showOutput([data.data])).catch(e=>console.log(e))
+    let update_item_id=null;
+    let appointment_details=document.getElementsByClassName("input")
+    let appointment_list=document.getElementById("appointments")
+    let book_btn=document.getElementById("button")
 
+    // show the appontments when the page loads
+    axios.get("https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp")
+    .then(res=>showOutput(res.data)).catch(e=>console.log(e))
+
+     // posts the input data in backend server
+function postUser(){
+  let detail={}
+    Array.from(appointment_details).forEach(e=>detail={...detail, [e.id]:e.value})
+  if(!update_item_id){
+    axios.post("https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp",detail).then(res=>showOutput([res.data])).catch(e=>console.log(e))
+  }
+  else{
+    (async function update_item(){
+      try{
+        await axios.put(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${update_item_id}`,detail)
+        let updated_value=await axios.get(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${update_item_id}`)
+        showOutput([updated_value.data])
+        update_item_id=null;
+      }
+      catch(e){
+         console.log(e)
+      }
+    })()
+ }
 }
 function showOutput(users){
     users.forEach(obj=>{
-        let li=document.createElement("li")
-        li.classList.add("user")
+        let list_item=document.createElement("li")
+        list_item.classList.add("user")
+        list_item.setAttribute("id",`${obj._id}`)
         let div=document.createElement("div")
         div.classList.add("details")
-        div.innerHTML=`<p>${obj.name}</p><p>Email- ${obj.email}</p><p>Phone-Number-${obj.number}</p>
-        <p>Date of appointment-${obj.date} at ${obj.time}</p>`
-       li.appendChild(div)
-        list.appendChild(li)
+        div.innerHTML=`<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone-Number: ${obj.number}</p>
+        <p>Date of appointment: ${obj.date} at ${obj.time}</p>`
+       list_item.appendChild(div)
+        appointment_list.appendChild(list_item)
+
+        // create delete button
         let deleteBtn=document.createElement("button")
         deleteBtn.textContent="Delete"
-        deleteBtn.addEventListener("click",()=>{
-            axios.delete(`https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp/${obj._id}`).then(data=>{
-              list.innerHTML=""
-                     axios.get("https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp").
-                     then(newData=>showOutput(newData.data)).catch(e=>console.log(e))
-            })
-            })
-         li.appendChild(deleteBtn)
-
+        list_item.appendChild(deleteBtn)
+        deleteBtn.addEventListener("click",delete_item)
+                    
+            
+        // create edit button
         let editBtn=document.createElement("button")
         editBtn.textContent="Edit"
-        editBtn.addEventListener("click",()=>{
-        axios.get(`https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp/${obj._id}`)
-        .then(data=>{Object.keys(data.data).forEach(e=>{
-                                  if(e!="_id"){
-                               let inputElement=document.getElementById(`${e}`)
-                                      inputElement.value=data.data[e]} })
-                list.innerHTML=""
-                axios.get('https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp').then(data=>{
-                    let newData=data.data.filter(e=>e._id!=obj._id)
-                    showOutput(newData)
-                }).catch(e=>console.log(e))
-      let formpage=document.getElementById("form-page")
-      let saveBtn=document.createElement("button")
-      saveBtn.textContent="save"
-      formpage.appendChild(saveBtn)
-      saveBtn.addEventListener("click",()=>{
-        let putObj={}
-       Array.from(details).forEach(e=>putObj={...putObj,[e.id]:e.value})
-      axios.put(`https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp/${obj._id}`,putObj).then(d=>{
-        list.innerHTML=""
-      axios.get('https://crudcrud.com/api/313bb13c80174f69afd35ea8264b6f3a/appointmentApp').then(data=>showOutput(data.data))
-      })
-      formpage.removeChild(saveBtn)
-      })
+        list_item.appendChild(editBtn)
+        editBtn.addEventListener("click",edit_item)
     })
-  })
-        //  li.appendChild(editBtn)
-    
-})
+}
+function edit_item(e){
+          axios.get(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${e.target.parentNode.id}`).then(res=>{
+          Object.keys(res.data).forEach(key=>key!="_id"?document.getElementById(`${key}`).value=res.data[key]:"")
+          update_item_id=e.target.parentNode.id
+          e.target.parentNode.remove()
+        })
+}
+function delete_item(e){
+                    axios.delete(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${e.target.parentNode.id}`)
+                    e.target.parentNode.remove()
 }
       
       
