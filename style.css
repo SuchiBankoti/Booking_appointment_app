@@ -1,53 +1,40 @@
 body{
     margin: 0;
-    background-color: rgb(101, 173, 240);
 }
 .container{
     padding: 10px;
     font-size: 1rem;
-}
-h2,h4{
-    margin: 0;
-    color: white;
-    font-size: 1rem;
-}
-#form-page{
-    border: 1px solid white;
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    font-size: 1rem;
+    width:50vh;
+    background-color: whitesmoke;
 
 }
+.heading{
+    margin: 0;
+    color: rgb(21, 54, 97);
+    font-size: 1rem;
+    border-bottom:2px solid rgb(21, 54, 97) ;
+    border-radius: 5px;
+}
 #form{
-    border-top: 2px solid white;
     display: flex;
     flex-direction: column;
     align-items:flex-start;
     padding:5px;
     font-size: 0.6rem;
 }
-#text{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 1rem;
-}
+
 button{
-    background-color:  rgb(234, 241, 248);
-    color:rgb(9, 8, 8);
-    border: 1px solid  rgb(101, 173, 240);
+    background-color:  rgb(206, 214, 225);
+    color:rgb(39, 70, 110) ;
+    border-radius: 5px;
 }
 #set-time{
     display: flex;
     font-size: 0.6rem;
 }
-#booking-list{
-    background-color: rgb(101, 173, 240);
-    color:white;
+#appointments{
     padding:10px;
 }
 .user{
-background-color:  rgb(138, 189, 233);
-margin:5px;
+    font-size: 0.8rem;
 }

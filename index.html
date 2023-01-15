@@ -11,27 +11,19 @@
 <body>
 <div class="container">
  <div class="row">
-    <div class="col">
-          <div class="box">
-             <h2>YAY</h2>
-         </div>
-    </div>
-    <div class="col">
-        <div class="box">
-            <div id="form-page">
-          <div id="text">
-            <h2>Book A Call</h2>
-            <p>To book a call with us fill the following form.</p>
-         </div>
+    <div class="box">
+        <p class="heading">Book An Appointment</p>
+        <br/>
+        <br/>
         <form id="form">
             <label for="name">Name
             <input type="text" value="" id="name" placeholder="name" class="input"/>
             </label>
            <br/>
-          <label for="email">Email
-          <input type="email" value="" id="email" placeholder="johnDoe@domain" class="input"/>
+           <label for="email">Email
+           <input type="email" value="" id="email" placeholder="johnDoe@domain" class="input"/>
            </label>
-          <br/>
+           <br/>
            <label for="number">Phone-Number
             <input type="text" value="" id="number" placeholder="xxxxxxxx" class="input"/>
            </label>
@@ -45,23 +37,22 @@
            <br/>
            <br/>
         </form>
-        <button id="button" onclick="postUser()">Get a Call</button>
-           </div>
-       </div>
+        <button id="button" onclick="postUser()">Submit</button>
     </div>
-    <div class="col">
-       <div class="box">
-          <a href="url">Home</a>
-          <a href="url">About</a>
-       </div>
-    </div>
-    </div>
-    <div class="row">
-        <h4>Appointments</h4>
+  </div>
+  <br/>
+  <br/>
+  <div class="row">
+    <div class="box">
+      <div class="appointment-list">
+        <p class="heading">Appointments</p>
+         <br/>
         <ol id="appointments">
-            
         </ol>
+      </div>
     </div>
+  </div>
+
 </div>
    
 </body>
@@ -74,11 +65,11 @@
     let appointment_list=document.getElementById("appointments")
     let book_btn=document.getElementById("button")
 
-    // show the appontments when the page loads
+    // show the appointments when the page loads
     axios.get("https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp")
     .then(res=>showOutput(res.data)).catch(e=>console.log(e))
 
-     // posts the input data in backend server
+     // posts the input data in database
 function postUser(){
   let detail={}
     Array.from(appointment_details).forEach(e=>detail={...detail, [e.id]:e.value})
@@ -106,8 +97,8 @@ function showOutput(users){
         list_item.setAttribute("id",`${obj._id}`)
         let div=document.createElement("div")
         div.classList.add("details")
-        div.innerHTML=`<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone-Number: ${obj.number}</p>
-        <p>Date of appointment: ${obj.date} at ${obj.time}</p>`
+        div.innerHTML=`<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone: ${obj.number}</p>
+        <p>Date of appointment: ${obj.date} at ${obj.time}</p><br/>`
        list_item.appendChild(div)
         appointment_list.appendChild(list_item)
 
