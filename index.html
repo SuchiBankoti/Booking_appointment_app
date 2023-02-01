@@ -1,134 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div class="container">
- <div class="row">
-    <div class="box">
-        <p class="heading">Book An Appointment</p>
-        <br/>
-        <br/>
-        <form id="form">
-            <label for="name">Name
-            <input type="text" value="" id="name" placeholder="name" class="input"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookingApp</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="box">
+          <p class="heading">Book An Appointment</p>
+          <br />
+          <br />
+          <form id="form">
+            <label for="name"
+              >Name
+              <input
+                type="text"
+                value=""
+                id="name"
+                placeholder="name"
+                class="input"
+              />
             </label>
-           <br/>
-           <label for="email">Email
-           <input type="email" value="" id="email" placeholder="johnDoe@domain" class="input"/>
-           </label>
-           <br/>
-           <label for="number">Phone-Number
-            <input type="text" value="" id="number" placeholder="xxxxxxxx" class="input"/>
-           </label>
-           <br/>
-            <label for="time">Time Of Call
-            <div id="set-time">
-              <input type="Date" value="" id="date" class="input"/>
-               <input type="time" value="" id="time" class="input"/>
-             </div>
-             </label>
-           <br/>
-           <br/>
-        </form>
-        <button id="button" onclick="postUser()">Submit</button>
-    </div>
-  </div>
-  <br/>
-  <br/>
-  <div class="row">
-    <div class="box">
-      <div class="appointment-list">
-        <p class="heading">Appointments</p>
-         <br/>
-        <ol id="appointments">
-        </ol>
+            <br />
+            <label for="email"
+              >Email
+              <input
+                type="email"
+                value=""
+                id="email"
+                placeholder="johnDoe@domain"
+                class="input"
+              />
+            </label>
+            <br />
+            <label for="number"
+              >Phone-Number
+              <input
+                type="text"
+                value=""
+                id="number"
+                placeholder="xxxxxxxx"
+                class="input"
+              />
+            </label>
+            <br />
+            <label for="time"
+              >Time Of Call
+              <div id="set-time">
+                <input type="Date" value="" id="date" class="input" />
+                <input type="time" value="" id="time" class="input" />
+              </div>
+            </label>
+            <br />
+            <br />
+          </form>
+          <button id="button" onclick="postUser()">Submit</button>
+        </div>
+      </div>
+      <br />
+      <br />
+      <div class="row">
+        <div class="box">
+          <div class="appointment-list">
+            <p class="heading">Appointments</p>
+            <br />
+            <ol id="appointments"></ol>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 
-</div>
-   
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+  <script>
+    let update_item_id = null;
+    let appointment_details = document.getElementsByClassName("input");
+    let appointment_list = document.getElementById("appointments");
+    let book_btn = document.getElementById("button");
 
-<script>
-    let update_item_id=null;
-    let appointment_details=document.getElementsByClassName("input")
-    let appointment_list=document.getElementById("appointments")
-    let book_btn=document.getElementById("button")
+    axios
+      .get(
+        "https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp"
+      )
+      .then((res) => showOutput(res.data))
+      .catch((e) => console.log(e));
 
-    // show the appointments when the page loads
-    axios.get("https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp")
-    .then(res=>showOutput(res.data)).catch(e=>console.log(e))
-
-     // posts the input data in database
-function postUser(){
-  let detail={}
-    Array.from(appointment_details).forEach(e=>detail={...detail, [e.id]:e.value})
-  if(!update_item_id){
-    axios.post("https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp",detail).then(res=>showOutput([res.data])).catch(e=>console.log(e))
-  }
-  else{
-    (async function update_item(){
-      try{
-        await axios.put(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${update_item_id}`,detail)
-        let updated_value=await axios.get(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${update_item_id}`)
-        showOutput([updated_value.data])
-        update_item_id=null;
+    function postUser() {
+      let detail = {};
+      Array.from(appointment_details).forEach(
+        (e) => (detail = { ...detail, [e.id]: e.value })
+      );
+      if (!update_item_id) {
+        axios
+          .post(
+            "https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp",
+            detail
+          )
+          .then((res) => showOutput([res.data]))
+          .catch((e) => console.log(e));
+      } else {
+        (async function update_item() {
+          try {
+            await axios.put(
+              `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${update_item_id}`,
+              detail
+            );
+            var updated_value = await axios.get(
+              `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${update_item_id}`
+            );
+          } catch (e) {
+            console.log(e);
+          } finally {
+            showOutput([updated_value.data]);
+            update_item_id = null;
+          }
+        })();
       }
-      catch(e){
-         console.log(e)
-      }
-    })()
- }
-}
-function showOutput(users){
-    users.forEach(obj=>{
-        let list_item=document.createElement("li")
-        list_item.classList.add("user")
-        list_item.setAttribute("id",`${obj._id}`)
-        let div=document.createElement("div")
-        div.classList.add("details")
-        div.innerHTML=`<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone: ${obj.number}</p>
-        <p>Date of appointment: ${obj.date} at ${obj.time}</p><br/>`
-       list_item.appendChild(div)
-        appointment_list.appendChild(list_item)
+    }
+    function showOutput(users) {
+      users.forEach((obj) => {
+        let list_item = document.createElement("li");
+        list_item.classList.add("user");
+        list_item.setAttribute("id", `${obj._id}`);
+        let div = document.createElement("div");
+        div.classList.add("details");
+        div.innerHTML = `<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone: ${obj.number}</p>
+        <p>Date of appointment: ${obj.date} at ${obj.time}</p><br/>`;
+        list_item.appendChild(div);
+        appointment_list.appendChild(list_item);
 
-        // create delete button
-        let deleteBtn=document.createElement("button")
-        deleteBtn.textContent="Delete"
-        list_item.appendChild(deleteBtn)
-        deleteBtn.addEventListener("click",delete_item)
-                    
-            
-        // create edit button
-        let editBtn=document.createElement("button")
-        editBtn.textContent="Edit"
-        list_item.appendChild(editBtn)
-        editBtn.addEventListener("click",edit_item)
-    })
-}
-function edit_item(e){
-          axios.get(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${e.target.parentNode.id}`).then(res=>{
-          Object.keys(res.data).forEach(key=>key!="_id"?document.getElementById(`${key}`).value=res.data[key]:"")
-          update_item_id=e.target.parentNode.id
-          e.target.parentNode.remove()
-        })
-}
-function delete_item(e){
-                    axios.delete(`https://crudcrud.com/api/fcbf0783a52b4260a15bbbea898fde30/appointmentApp/${e.target.parentNode.id}`)
-                    e.target.parentNode.remove()
-}
-      
-      
-</script>
+        let deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        list_item.appendChild(deleteBtn);
+        deleteBtn.addEventListener("click", delete_item);
+
+        let editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        list_item.appendChild(editBtn);
+        editBtn.addEventListener("click", edit_item);
+      });
+    }
+    function edit_item(e) {
+      axios
+        .get(
+          `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${e.target.parentNode.id}`
+        )
+        .then((res) => {
+          Object.keys(res.data).forEach((key) =>
+            key != "_id"
+              ? (document.getElementById(`${key}`).value = res.data[key])
+              : ""
+          );
+          update_item_id = e.target.parentNode.id;
+          e.target.parentNode.remove();
+        });
+    }
+    function delete_item(e) {
+      axios.delete(
+        `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${e.target.parentNode.id}`
+      );
+      e.target.parentNode.remove();
+    }
+  </script>
 </html>
-
