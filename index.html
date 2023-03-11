@@ -95,7 +95,7 @@
 
     axios
       .get(
-        "https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp"
+        "https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp"
       )
       .then((res) => showOutput(res.data))
       .catch((e) => console.log(e));
@@ -108,7 +108,7 @@
       if (!update_item_id) {
         axios
           .post(
-            "https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp",
+            "https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp",
             detail
           )
           .then((res) => showOutput([res.data]))
@@ -117,11 +117,11 @@
         (async function update_item() {
           try {
             await axios.put(
-              `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${update_item_id}`,
+              `https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp/${update_item_id}`,
               detail
             );
             var updated_value = await axios.get(
-              `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${update_item_id}`
+              `https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp/${update_item_id}`
             );
           } catch (e) {
             console.log(e);
@@ -158,7 +158,7 @@
     function edit_item(e) {
       axios
         .get(
-          `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${e.target.parentNode.id}`
+          `https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp/${e.target.parentNode.id}`
         )
         .then((res) => {
           Object.keys(res.data).forEach((key) =>
@@ -172,7 +172,7 @@
     }
     function delete_item(e) {
       axios.delete(
-        `https://crudcrud.com/api/175986fff9f84a8b9e28732c82d0e720/appointmentApp/${e.target.parentNode.id}`
+        `https://crudcrud.com/api/23668a7790344530a0175767baeae367/appointmentApp/${e.target.parentNode.id}`
       );
       e.target.parentNode.remove();
     }
