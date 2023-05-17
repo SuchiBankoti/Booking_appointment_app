@@ -11,7 +11,7 @@
       integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div class="container">
@@ -20,15 +20,15 @@
           <p class="heading">Book An Appointment</p>
           <br />
           <br />
-          <form id="form">
+          <form id="form" onsubmit="postApt(event)">
             <label for="name"
               >Name
               <input
                 type="text"
-                value=""
                 id="name"
                 placeholder="name"
                 class="input"
+                name="name"
               />
             </label>
             <br />
@@ -36,10 +36,10 @@
               >Email
               <input
                 type="email"
-                value=""
                 id="email"
                 placeholder="johnDoe@domain"
                 class="input"
+                name="email"
               />
             </label>
             <br />
@@ -47,24 +47,24 @@
               >Phone-Number
               <input
                 type="text"
-                value=""
                 id="number"
                 placeholder="xxxxxxxx"
                 class="input"
+                name="number"
               />
             </label>
             <br />
             <label for="time"
               >Time Of Call
               <div id="set-time">
-                <input type="Date" value="" id="date" class="input" />
-                <input type="time" value="" id="time" class="input" />
+                <input type="Date" id="date" class="input" name="date" />
+                <input type="time" id="time" class="input" name="time" />
               </div>
             </label>
             <br />
             <br />
+            <button id="button" type="submit">Submit</button>
           </form>
-          <button id="button" onclick="postUser()">Submit</button>
         </div>
       </div>
       <br />
@@ -88,55 +88,33 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
 
   <script>
-    let update_item_id = null;
-    let appointment_details = document.getElementsByClassName("input");
+    getData();
+    function getData() {
+      axios
+        .get("/data")
+        .then((response) => showOutput(response.data))
+        .catch((e) => console.log(e));
+    }
+
+    let formData = document.getElementsByClassName("input");
     let appointment_list = document.getElementById("appointments");
     let book_btn = document.getElementById("button");
 
-    axios
-      .get(
-        "https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp"
-      )
-      .then((res) => showOutput(res.data))
-      .catch((e) => console.log(e));
-
-    function postUser() {
-      let detail = {};
-      Array.from(appointment_details).forEach(
-        (e) => (detail = { ...detail, [e.id]: e.value })
-      );
-      if (!update_item_id) {
-        axios
-          .post(
-            "https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp",
-            detail
-          )
-          .then((res) => showOutput([res.data]))
-          .catch((e) => console.log(e));
-      } else {
-        (async function update_item() {
-          try {
-            await axios.put(
-              `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${update_item_id}`,
-              detail
-            );
-            var updated_value = await axios.get(
-              `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${update_item_id}`
-            );
-          } catch (e) {
-            console.log(e);
-          } finally {
-            showOutput([updated_value.data]);
-            update_item_id = null;
-          }
-        })();
-      }
+    function postApt(event) {
+      event.preventDefault();
+      let details = {};
+      Array.from(formData).forEach((e) => (details[e.name] = e.value));
+      axios
+        .post("/postApt", details)
+        .then((response) => showOutput([response.data]))
+        .catch((e) => console.log(e));
     }
+
     function showOutput(users) {
       users.forEach((obj) => {
         let list_item = document.createElement("li");
         list_item.classList.add("user");
-        list_item.setAttribute("id", `${obj._id}`);
+        list_item.setAttribute("id", `${obj.id}`);
         let div = document.createElement("div");
         div.classList.add("details");
         div.innerHTML = `<p>Name: ${obj.name}</p><p>Email:  ${obj.email}</p><p>Phone: ${obj.number}</p>
@@ -155,26 +133,29 @@
         editBtn.addEventListener("click", edit_item);
       });
     }
-    function edit_item(e) {
-      axios
-        .get(
-          `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
-        )
-        .then((res) => {
-          Object.keys(res.data).forEach((key) =>
-            key != "_id"
-              ? (document.getElementById(`${key}`).value = res.data[key])
-              : ""
-          );
-          update_item_id = e.target.parentNode.id;
-          e.target.parentNode.remove();
-        });
-    }
-    function delete_item(e) {
-      axios.delete(
-        `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
-      );
-      e.target.parentNode.remove();
-    }
+
+    function edit_item() {}
+    function delete_item() {}
+    // function edit_item(e) {
+    //   axios
+    //     .get(
+    //       `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
+    //     )
+    //     .then((res) => {
+    //       Object.keys(res.data).forEach((key) =>
+    //         key != "_id"
+    //           ? (document.getElementById(`${key}`).value = res.data[key])
+    //           : ""
+    //       );
+    //       update_item_id = e.target.parentNode.id;
+    //       e.target.parentNode.remove();
+    //     });
+    // }
+    // function delete_item(e) {
+    //   axios.delete(
+    //     `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
+    //   );
+    //   e.target.parentNode.remove();
+    // }
   </script>
 </html>
