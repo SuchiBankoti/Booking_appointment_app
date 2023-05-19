@@ -29,6 +29,7 @@
                 placeholder="name"
                 class="input"
                 name="name"
+                required
               />
             </label>
             <br />
@@ -95,7 +96,7 @@
         .then((response) => showOutput(response.data))
         .catch((e) => console.log(e));
     }
-
+    let update_apt_id = null;
     let formData = document.getElementsByClassName("input");
     let appointment_list = document.getElementById("appointments");
     let book_btn = document.getElementById("button");
@@ -104,10 +105,22 @@
       event.preventDefault();
       let details = {};
       Array.from(formData).forEach((e) => (details[e.name] = e.value));
-      axios
-        .post("/postApt", details)
-        .then((response) => showOutput([response.data]))
-        .catch((e) => console.log(e));
+      if (!update_apt_id) {
+        axios
+          .post("/postApt", details)
+          .then((response) => {
+            console.log(response.data);
+            showOutput([response.data]);
+          })
+          .catch((e) => console.log(e));
+      } else {
+        axios
+          .post(`/edit/${update_apt_id}`, details)
+          .then((res) => {
+            afterEdit();
+          })
+          .catch((e) => console.log(e));
+      }
     }
 
     function showOutput(users) {
@@ -125,37 +138,50 @@
         let deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Delete";
         list_item.appendChild(deleteBtn);
-        deleteBtn.addEventListener("click", delete_item);
+        deleteBtn.addEventListener("click", () => delete_item(`${obj.id}`));
 
         let editBtn = document.createElement("button");
         editBtn.textContent = "Edit";
         list_item.appendChild(editBtn);
-        editBtn.addEventListener("click", edit_item);
+        editBtn.addEventListener("click", () => edit_item(`${obj.id}`));
       });
     }
 
-    function edit_item() {}
-    function delete_item() {}
-    // function edit_item(e) {
-    //   axios
-    //     .get(
-    //       `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
-    //     )
-    //     .then((res) => {
-    //       Object.keys(res.data).forEach((key) =>
-    //         key != "_id"
-    //           ? (document.getElementById(`${key}`).value = res.data[key])
-    //           : ""
-    //       );
-    //       update_item_id = e.target.parentNode.id;
-    //       e.target.parentNode.remove();
-    //     });
-    // }
-    // function delete_item(e) {
-    //   axios.delete(
-    //     `https://crudcrud.com/api/f28adca7f1ac4875b98aa5f1c108acbd/appointmentApp/${e.target.parentNode.id}`
-    //   );
-    //   e.target.parentNode.remove();
-    // }
+    function delete_item(id) {
+      console.log(id);
+      axios
+        .delete(`/delete/${id}`)
+        .then((data) => console.log("deleted"))
+        .catch((e) => console.log(e));
+      const deleteApt = document.getElementById(`${id}`);
+      deleteApt.parentNode.removeChild(deleteApt);
+    }
+
+    function edit_item(id) {
+      update_apt_id = id;
+      axios.get(`/data/${update_apt_id}`).then((res) => {
+        document.getElementById("name").value = res.data.name;
+        document.getElementById("email").value = res.data.email;
+        document.getElementById("number").value = res.data.number;
+        document.getElementById("date").value = res.data.date;
+        document.getElementById("time").value = res.data.time;
+        const editApt = document.getElementById(`${id}`);
+        editApt.parentNode.removeChild(editApt);
+      });
+    }
+    function afterEdit() {
+      document.getElementById("name").value = "";
+      document.getElementById("email").value = "";
+      document.getElementById("number").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("time").value = "";
+      axios
+        .get(`/data/${update_apt_id}`)
+        .then((res) => {
+          showOutput([res.data]);
+          update_apt_id = null;
+        })
+        .catch((e) => console.log(e));
+    }
   </script>
 </html>

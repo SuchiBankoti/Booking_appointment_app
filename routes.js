@@ -3,6 +3,7 @@ const route = express.Router();
 const {
   home,
   getAllApt,
+  getOneApt,
   postApt,
   editApt,
   deleteApt,
@@ -11,7 +12,8 @@ const {
 route.get("/", home);
 route.get("/data", getAllApt);
 route.post("/postApt", postApt);
-route.put("/edit:id", editApt);
-route.post("/delete:id", deleteApt);
+route.get("/data/:id", getOneApt);
+route.post("/edit/:id", editApt);
+route.delete("/delete/:id", deleteApt);
 
 module.exports = route;

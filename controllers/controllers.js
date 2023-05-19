@@ -16,6 +16,23 @@ const getAllApt = (req, res) => {
     })
     .catch((e) => console.log(e));
 };
+const getOneApt = (req, res) => {
+  const aptId = req.params.id;
+  Appointment.findOne({
+    where: {
+      id: aptId,
+    },
+  })
+    .then((apt) => {
+      if (apt) {
+        const oneApt = apt.toJSON();
+        res.json(oneApt);
+      } else {
+        console.log(`Appointment with ID ${aptId} not found.`);
+      }
+    })
+    .catch((e) => console.log(e));
+};
 
 const postApt = (req, res) => {
   const name = req.body.name;
@@ -40,11 +57,13 @@ const editApt = (req, res) => {
   Appointment.update(updatedObj, {
     where: { id: id },
   })
-    .then((data) => console.log("appoinment updated"))
+    .then((data) => res.json(data))
     .catch((e) => console.log(e));
 };
-const deleteApt = () => {
+
+const deleteApt = (req, res) => {
   const id = req.params.id;
+  console.log(id);
   Appointment.destroy({
     where: {
       id: id,
@@ -56,6 +75,7 @@ const deleteApt = () => {
 module.exports = {
   home,
   getAllApt,
+  getOneApt,
   postApt,
   editApt,
   deleteApt,
